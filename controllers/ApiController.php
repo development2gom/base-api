@@ -1,54 +1,45 @@
 <?php
-namespace app\controllers;
 
-#https://www.yiiframework.com/doc/api/2.0/yii-data-datafilter
+namespace app\controllers;
 
 use Yii;
 use yii\rest\Controller;
-use app\models\EntLocalidades;
-use app\models\EntLocalidadesSearch;
-use yii\data\ActiveDataProvider;
 use yii\data\ActiveDataFilter;
-use yii\web\NotFoundHttpException;
+use yii\data\ActiveDataProvider;
+use app\models\searchs\ConCategoiriesSearch;
+use app\models\EntProductosSearch;
+use app\models\EntLocalidadesSearch;
 
+/**
+ * ConCategoiriesController implements the CRUD actions for ConCategoiries model.
+ */
 class ApiController extends Controller
-{
-
+{   
     public $serializer = [
-        'class' => 'yii\rest\Serializer',
+        'class' => 'app\components\SerializerExtends',
         'collectionEnvelope' => 'items',
     ];
 
-    // Filtros
-    public function actionIndex()
+    /**
+     * {@inheritdoc}
+     */
+    protected function verbs()
     {
+        return [
+            'localidades' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT', 'PATCH'],
+            'delete' => ['DELETE'],
+        ];
+    }
+
+    public function actionLocalidades(){
         
-        $filter = new ActiveDataFilter([
-            // Aqui colocar el modelo search
-            'searchModel' => 'app\models\EntLocalidadesSearch'
-        ]);
-        
-        $filterCondition = null;
-        
-        // You may load filters from any source. For example,
-        // if you prefer JSON in request body,
-        // use Yii::$app->request->getBodyParams() below:
-        if ($filter->load(\Yii::$app->request->get())) { 
-            $filterCondition = $filter->build();
-            if ($filterCondition === false) {
-                // Serializer would get errors out of it
-                return $filter;
-            }
-        }
-        
-        $query = EntLocalidades::find();
-        if ($filterCondition !== null) {
-            $query->andWhere($filterCondition);
-        }
-        
-        return new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $modelSearch = new EntLocalidadesSearch();
+        $dataProvider = $modelSearch->search(Yii::$app->getRequest()->get());
+
+        return $dataProvider;
     }
 
 }

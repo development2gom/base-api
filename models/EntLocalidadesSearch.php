@@ -50,7 +50,7 @@ class EntLocalidadesSearch extends EntLocalidades
             'query' => $query,
         ]);
 
-        $this->load($params);
+        $this->load($params, '');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails

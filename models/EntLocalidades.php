@@ -114,16 +114,7 @@ class EntLocalidades extends \yii\db\ActiveRecord
             'b_archivada' => 'B Archivada',
             'b_status_localidad' => 'B Status Localidad',
         ];
-    }
-
-    
-
-    public function extraFields()
-    {
-        return ['estado'];
-    }
-
-    
+    }  
 
     /**
      * @return \yii\db\ActiveQuery
@@ -171,5 +162,19 @@ class EntLocalidades extends \yii\db\ActiveRecord
     public function getWrkTareas()
     {
         return $this->hasMany(WrkTareas::className(), ['id_localidad' => 'id_localidad']);
+    }
+
+    public function fields(){
+        $fields = parent::fields();
+        
+        $fields[] = 'usuario';
+        unset($fields['id_localidad'], $fields['id_estado']);
+
+        return $fields;
+    }
+
+    public function extraFields(){
+
+        return ['usuario'];
     }
 }
