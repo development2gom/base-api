@@ -10,6 +10,7 @@ use app\models\searchs\ConCategoiriesSearch;
 use app\models\EntProductosSearch;
 use app\models\EntLocalidadesSearch;
 use app\models\EntLocalidades;
+use yii\web\HttpException;
 
 /**
  * ConCategoiriesController implements the CRUD actions for ConCategoiries model.
@@ -60,5 +61,26 @@ class ApiController extends Controller
         if(!$localidad->save()){
             print_r($localidad->errors);
         }
+    }
+
+    public function actionUpdate($id){
+        $request = Yii::$app->request;
+        //$request->getBodyParam('id');
+
+        // returns all parameters
+        //$params = $request->bodyParams;
+
+        $model = EntLocalidades::find()->where(['id_localidad'=>$id])->one();
+
+        if($model->load($request->bodyParams, "")){
+            if($model->save()){
+                return $model;
+            }else{
+                throw new HttpException(400, "No se guardo");
+            }
+        }else{
+            throw new HttpException(400, "No se encontro la localidad");
+        }
+        print_r($params);exit;
     }
 }
