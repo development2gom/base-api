@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\DownloadJob;
 
 class SiteController extends Controller
 {
@@ -61,6 +62,20 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $id = Yii::$app->queue->push(new DownloadJob([
+            'url' => 'http://localhost/gestor-localidades/web/localidades/exportar-localidades',
+            'file' => '/tmp/loc.csv',
+        ]));
+
+        // Yii::$app->queue->delay(1 * 60)->push(new DownloadJob([
+        //     'url' => 'http://localhost/gestor-localidades/web/localidades/exportar-localidades',
+        //     'file' => '/tmp/loc.csv',
+        // ]));
+
+        // echo Yii::$app->queue->isDone($this->id);exit;
+        // echo Yii::$app->queue->isWaiting($this->id);exit;
+        // print_r($this->id);exit;
+
         return $this->render('index');
     }
 
