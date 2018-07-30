@@ -74,13 +74,38 @@ class ApiController extends Controller
 
         if($model->load($request->bodyParams, "")){
             if($model->save()){
+                
                 return $model;
             }else{
                 throw new HttpException(400, "No se guardo");
             }
+        }
+        print_r($params);exit;
+    }
+
+    public function actionView($id){
+        $model = EntLocalidades::find()->where(['id_localidad'=>$id])->one();
+
+        if($model){
+
+            return $model;
         }else{
             throw new HttpException(400, "No se encontro la localidad");
         }
-        print_r($params);exit;
+    }
+
+    public function actionDelete($id){
+        $model = EntLocalidades::find()->where(['id_localidad'=>$id])->one();
+
+        if($model){
+            if($model->delete()){
+
+                echo json_encode(array('status'=>'success', 'message'=>'Se elimino correctamente la localidad'),JSON_PRETTY_PRINT);
+            }else{
+                throw new HttpException(400, "No se pudo eliminar la localidad");
+            }
+        }else{
+            throw new HttpException(400, "No se encontro la localidad");
+        }
     }
 }
